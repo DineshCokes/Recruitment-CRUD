@@ -40,8 +40,24 @@ Make sure you have installed:
 ---
 
 ### 🔹 Backend (Spring Boot)
+### Employee Directory
+![Employee Directory](assets/Employee-Directory.png)
+
+### Add New Employee
+![Add Employee](assets/Employee-Hiring.png)
+
+### View Employee Details
+![Employee Details](assets/Employee-Read.png)
+
+### Update Employee
+![Update Employee](assets/Employee-Update.png)
 1. Clone the repo:
    ```bash
    git clone https://github.com/DineshCokes/Recruitment-CRUD.git
    cd Recruitment-CRUD/operation
+
+   ## 📸 Screenshots
+
+
+
 
