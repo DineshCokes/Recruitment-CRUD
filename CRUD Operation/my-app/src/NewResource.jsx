@@ -613,6 +613,150 @@
 //   );
 // }
 
+// import React, { useState } from "react";
+// import { create } from "./API";
+
+// export default function NewResource({ reload }) {
+//   const [person, setPerson] = useState({
+//     resName: "",
+//     resPay: "",
+//     resArea: "",
+//     resSkills: [],
+//   });
+
+//   const [error, setError] = useState("");
+//   const [success, setSuccess] = useState("");
+
+//   const track = (e) => {
+//     const { name, value } = e.target;
+//     setPerson({ ...person, [name]: value });
+//   };
+
+//   const tracks = (e) => {
+//     let updatedSkills = [...person.resSkills];
+//     if (e.target.checked) {
+//       updatedSkills.push(e.target.value);
+//     } else {
+//       updatedSkills = updatedSkills.filter((s) => s !== e.target.value);
+//     }
+//     setPerson({ ...person, resSkills: updatedSkills });
+//   };
+
+//   const hire = async () => {
+//     setError("");
+//     setSuccess("");
+
+//     if (!person.resName.trim() || !person.resPay || !person.resArea) {
+//       setError("Please fill all required fields (Name, Commercial, Location).");
+//       return;
+//     }
+//     if (isNaN(person.resPay) || Number(person.resPay) <= 0) {
+//       setError("Commercial must be a positive number.");
+//       return;
+//     }
+
+//     try {
+//       await create(person);
+//       setSuccess("✅ Employee added successfully!");
+//       setPerson({ resName: "", resPay: "", resArea: "", resSkills: [] });
+//       if (reload) reload();
+//     } catch (err) {
+//       setError("❌ Error adding employee. Please try again.");
+//       console.error(err);
+//     }
+//   };
+
+//   return (
+//     <div className="container mt-5">
+//       <div className="row justify-content-center">
+//         <div className="col-lg-6 col-md-8 col-sm-12">
+//           <div className="card shadow-lg border-0 rounded-4">
+//             <div className="card-header bg-info text-white text-center rounded-top-4">
+//               <h3 className="m-0 text-uppercase">Hire New Resource</h3>
+//             </div>
+//             <div className="card-body bg-light p-4">
+
+//               {/* Alerts */}
+//               {error && <div className="alert alert-danger">{error}</div>}
+//               {success && <div className="alert alert-success">{success}</div>}
+
+//               <div className="mb-3">
+//                 <label className="form-label fw-bold">Resource Name</label>
+//                 <input
+//                   type="text"
+//                   name="resName"
+//                   value={person.resName}
+//                   onChange={track}
+//                   placeholder="Enter resource name"
+//                   className="form-control"
+//                   required
+//                 />
+//               </div>
+
+//               <div className="row">
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label fw-bold">Commercial</label>
+//                   <input
+//                     type="number"
+//                     name="resPay"
+//                     value={person.resPay}
+//                     onChange={track}
+//                     placeholder="Per day rate"
+//                     className="form-control"
+//                     required
+//                   />
+//                 </div>
+//                 <div className="col-md-6 mb-3">
+//                   <label className="form-label fw-bold">Location</label>
+//                   <select
+//                     name="resArea"
+//                     className="form-select"
+//                     value={person.resArea}
+//                     onChange={track}
+//                     required
+//                   >
+//                     <option value="">Select Location</option>
+//                     <option>Chennai</option>
+//                     <option>Bangalore</option>
+//                     <option>Salem</option>
+//                     <option>Other</option>
+//                   </select>
+//                 </div>
+//               </div>
+
+//               <div className="mb-3">
+//                 <label className="form-label fw-bold">Skills</label>
+//                 <div className="d-flex flex-wrap gap-3">
+//                   {["Java", "Python", "JavaScript"].map((skill) => (
+//                     <div key={skill} className="form-check">
+//                       <input
+//                         type="checkbox"
+//                         value={skill}
+//                         checked={person.resSkills.includes(skill)}
+//                         onChange={tracks}
+//                         className="form-check-input"
+//                         id={skill}
+//                       />
+//                       <label className="form-check-label" htmlFor={skill}>
+//                         {skill}
+//                       </label>
+//                     </div>
+//                   ))}
+//                 </div>
+//               </div>
+
+//               <div className="text-center mt-4">
+//                 <button onClick={hire} className="btn btn-success px-4 py-2 rounded-pill shadow-sm">
+//                   <i className="bi bi-person-plus-fill me-2"></i> Hire Resource
+//                 </button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 import React, { useState } from "react";
 import { create } from "./API";
 
@@ -646,6 +790,7 @@ export default function NewResource({ reload }) {
     setError("");
     setSuccess("");
 
+    // Validation
     if (!person.resName.trim() || !person.resPay || !person.resArea) {
       setError("Please fill all required fields (Name, Commercial, Location).");
       return;
@@ -656,7 +801,14 @@ export default function NewResource({ reload }) {
     }
 
     try {
-      await create(person);
+      // Convert frontend keys to backend keys
+      await create({
+        name: person.resName,
+        salary: person.resPay,
+        location: person.resArea,
+        skills: person.resSkills,
+      });
+
       setSuccess("✅ Employee added successfully!");
       setPerson({ resName: "", resPay: "", resArea: "", resSkills: [] });
       if (reload) reload();
@@ -675,8 +827,6 @@ export default function NewResource({ reload }) {
               <h3 className="m-0 text-uppercase">Hire New Resource</h3>
             </div>
             <div className="card-body bg-light p-4">
-
-              {/* Alerts */}
               {error && <div className="alert alert-danger">{error}</div>}
               {success && <div className="alert alert-success">{success}</div>}
 
@@ -746,7 +896,10 @@ export default function NewResource({ reload }) {
               </div>
 
               <div className="text-center mt-4">
-                <button onClick={hire} className="btn btn-success px-4 py-2 rounded-pill shadow-sm">
+                <button
+                  onClick={hire}
+                  className="btn btn-success px-4 py-2 rounded-pill shadow-sm"
+                >
                   <i className="bi bi-person-plus-fill me-2"></i> Hire Resource
                 </button>
               </div>
